@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Central Detective Council Chat</title>
+
+<style>
+
+body{
+    font-family: Arial, sans-serif;
+    background:#0f1720;
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.chat-container{
+    width:380px;
+    background:#111827;
+    border-radius:10px;
+    overflow:hidden;
+    box-shadow:0 0 15px black;
+}
+
+.header{
+    background:#1f2937;
+    padding:12px;
+}
+
+.header h3{
+    margin:0;
+}
+
+.header span{
+    font-size:12px;
+    color:#9ca3af;
+}
+
+.messages{
+    height:300px;
+    overflow-y:auto;
+    padding:10px;
+}
+
+.message{
+    margin:8px 0;
+    padding:8px 10px;
+    border-radius:6px;
+    max-width:80%;
+}
+
+.received{
+    background:#374151;
+}
+
+.sent{
+    background:#2563eb;
+    margin-left:auto;
+}
+
+.input-area{
+    display:flex;
+    border-top:1px solid #333;
+}
+
+.input-area input{
+    flex:1;
+    padding:10px;
+    border:none;
+    outline:none;
+}
+
+.input-area button{
+    background:#2563eb;
+    color:white;
+    border:none;
+    padding:10px 15px;
+    cursor:pointer;
+}
+
+.popup{
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    background:#111827;
+    padding:15px;
+    border-radius:8px;
+    box-shadow:0 0 10px black;
+    display:none;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="chat-container">
+
+<div class="header">
+<h3>Officer Daniel Reed</h3>
+<span>Senior Investigation Officer</span>
+</div>
+
+<div class="messages" id="messages"></div>
+
+<div class="input-area">
+<input id="msgInput" placeholder="Type your reply...">
+<button onclick="sendMessage()">Send</button>
+</div>
+
+</div>
+
+<div class="popup" id="popup">
+<strong>New Message</strong>
+<p id="popupText"></p>
+<button onclick="replyPopup()">Reply</button>
+</div>
+
+<script>
+
+const messages = document.getElementById("messages");
+
+function sendMessage(){
+    const input = document.getElementById("msgInput");
+    const text = input.value;
+
+    if(text === "") return;
+
+    const msg = document.createElement("div");
+    msg.className = "message sent";
+    msg.innerText = text;
+
+    messages.appendChild(msg);
+
+    input.value = "";
+
+    messages.scrollTop = messages.scrollHeight;
+}
+
+function receiveMessage(text){
+
+    const msg = document.createElement("div");
+    msg.className = "message received";
+    msg.innerText = text;
+
+    messages.appendChild(msg);
+
+    document.getElementById("popupText").innerText = text;
+    document.getElementById("popup").style.display="block";
+
+    messages.scrollTop = messages.scrollHeight;
+}
+
+function replyPopup(){
+    document.getElementById("popup").style.display="none";
+    document.getElementById("msgInput").focus();
+}
+
+/* demo incoming message */
+setTimeout(()=>{
+    receiveMessage("Detective, a new encrypted file has been received from HQ.");
+},4000);
+
+</script>
+
+</body>
+</html>
