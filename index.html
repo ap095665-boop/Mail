@@ -7,119 +7,123 @@
 
 body{
 margin:0;
-background:#050b18;
-font-family:Arial;
 height:100vh;
 display:flex;
 justify-content:center;
 align-items:center;
+background:#050a14;
+font-family:Arial;
 color:#00eaff;
 }
 
-/* phone screen */
+/* phone frame */
 
-#screen{
+.phone{
 width:340px;
-height:640px;
+height:600px;
 border-radius:30px;
-background:#020611;
-border:2px solid #00eaff33;
+background:#0b1424;
+box-shadow:0 0 30px rgba(0,255,255,0.2);
 overflow:hidden;
 position:relative;
-box-shadow:0 0 40px #00eaff33 inset;
 }
 
-/* notification screen */
+/* header */
 
-#notification{
-position:absolute;
-width:100%;
-height:100%;
-display:flex;
-justify-content:center;
-align-items:center;
-flex-direction:column;
-text-align:center;
-}
-
-.notifyBox{
-border:1px solid #00eaff55;
-padding:20px;
-border-radius:10px;
-background:#03102a;
-box-shadow:0 0 20px #00eaff33;
-cursor:pointer;
-}
-
-.notifyBox:hover{
-background:#04153a;
-}
-
-/* message interface */
-
-#chat{
-display:none;
-position:absolute;
-width:100%;
-height:100%;
-padding:20px;
-box-sizing:border-box;
-}
-
-.message{
-background:#021b2e;
+.header{
 padding:15px;
-border-radius:8px;
-border:1px solid #00eaff55;
-margin-bottom:20px;
+text-align:center;
+font-weight:bold;
+border-bottom:1px solid rgba(0,255,255,.3);
 }
 
-.replyBtn{
-border:none;
-background:#00eaff;
-color:#000;
-padding:10px 20px;
-border-radius:6px;
+/* message notification */
+
+.messageCard{
+margin:20px;
+padding:15px;
+border-radius:12px;
+background:rgba(0,255,255,0.05);
+border:1px solid rgba(0,255,255,.4);
 cursor:pointer;
-font-weight:bold;
+transition:.3s;
+}
+
+.messageCard:hover{
+background:rgba(0,255,255,0.15);
+}
+
+/* chat screen */
+
+.chatScreen{
+display:none;
+flex-direction:column;
+height:100%;
+}
+
+/* message bubble */
+
+.msg{
+margin:15px;
+padding:12px;
+border-radius:10px;
+background:rgba(0,255,255,.15);
+}
+
+/* typing area */
+
+.inputArea{
+position:absolute;
+bottom:0;
+width:100%;
+display:flex;
+background:#09101c;
+border-top:1px solid rgba(0,255,255,.3);
+}
+
+input{
+flex:1;
+padding:15px;
+background:transparent;
+border:none;
+color:#00eaff;
+outline:none;
+}
+
+/* send button */
+
+button{
+padding:15px 20px;
+background:#00eaff;
+border:none;
+color:black;
+cursor:pointer;
+}
+
+/* sent message */
+
+.sent{
+align-self:flex-end;
+background:#00eaff;
+color:black;
+margin:15px;
+padding:12px;
+border-radius:10px;
+animation:sendAnim .4s ease;
+}
+
+/* tick mark */
+
+.tick{
+font-size:12px;
+margin-left:6px;
 }
 
 /* send animation */
 
-#sending{
-display:none;
-position:absolute;
-width:100%;
-height:100%;
-justify-content:center;
-align-items:center;
-flex-direction:column;
-background:#01040b;
-}
-
-.circle{
-width:80px;
-height:80px;
-border-radius:50%;
-border:3px solid #00eaff;
-border-top:3px solid transparent;
-animation:spin 1s linear infinite;
-margin-bottom:20px;
-}
-
-@keyframes spin{
-0%{transform:rotate(0)}
-100%{transform:rotate(360deg)}
-}
-
-.sent{
-font-size:20px;
-animation:glow 1s infinite alternate;
-}
-
-@keyframes glow{
-from{opacity:0.5}
-to{opacity:1}
+@keyframes sendAnim{
+0%{transform:translateX(40px);opacity:0}
+100%{transform:translateX(0);opacity:1}
 }
 
 </style>
@@ -127,57 +131,41 @@ to{opacity:1}
 
 <body>
 
-<div id="screen">
+<div class="phone">
 
-<!-- notification -->
+<div class="header">Secure Channel</div>
 
-<div id="notification">
+<!-- Inbox -->
 
-<div class="notifyBox" onclick="openMessage()">
+<div id="inbox">
 
-INCOMING MESSAGE<br><br>
+<div class="messageCard" onclick="openMessage()">
 
-Central Detective Council<br><br>
+<strong>Central Detective Council</strong>
 
-Tap to Open
-
-</div>
-
-</div>
-
-<!-- chat screen -->
-
-<div id="chat">
-
-<div class="message">
-
-Paul's Detective Agency,
-
-Your agency has been selected
-for the missing developer investigation.
-
-Reply immediately to confirm.
+<p style="margin-top:8px;color:#8defff;">
+Case assigned. Immediate response required.
+</p>
 
 </div>
 
-<button class="replyBtn" onclick="sendReply()">
-
-Send Confirmation
-
-</button>
-
 </div>
 
-<!-- sending screen -->
+<!-- Chat Screen -->
 
-<div id="sending">
+<div id="chat" class="chatScreen">
 
-<div class="circle"></div>
+<div class="msg">
+Central Detective Council:
+<br><br>
+Your agency has been selected for the investigation.
+</div>
 
-<div class="sent">
+<div id="chatArea"></div>
 
-Message Sent
-
+<div class="inputArea">
+<input id="replyInput" placeholder="Type reply...">
+<button onclick="sendMessage()">Send</button>
 </div>
 
 </div>
@@ -188,15 +176,25 @@ Message Sent
 
 function openMessage(){
 
-document.getElementById("notification").style.display="none"
-document.getElementById("chat").style.display="block"
+document.getElementById("inbox").style.display="none"
+document.getElementById("chat").style.display="flex"
 
 }
 
-function sendReply(){
+function sendMessage(){
 
-document.getElementById("chat").style.display="none"
-document.getElementById("sending").style.display="flex"
+let input=document.getElementById("replyInput")
+let text=input.value.trim()
+
+if(text==="") return
+
+let bubble=document.createElement("div")
+bubble.className="sent"
+bubble.innerHTML=text+' <span class="tick">✓</span>'
+
+document.getElementById("chatArea").appendChild(bubble)
+
+input.value=""
 
 }
 
