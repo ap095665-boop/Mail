@@ -172,11 +172,7 @@ Case assigned. Immediate response required.
 
 <div id="chat" class="chatScreen">
 
-<div class="msg">
-Central Detective Council:
-<br><br>
-Your agency has been selected for the investigation.
-</div>
+<div class="msg" id="councilMsg"></div>
 
 <div id="chatArea"></div>
 
@@ -200,6 +196,40 @@ Transmission Sent ✓
 function openMessage(){
 document.getElementById("inbox").style.display="none"
 document.getElementById("chat").style.display="flex"
+  typeMessage();
+}
+
+  const messageText =
+"Central Detective Council:\n\nYour agency has been selected for the investigation.";
+
+function typeMessage() {
+
+let i = 0;
+let speed = 35;
+let target = document.getElementById("councilMsg");
+
+target.innerHTML = "";
+
+function typing(){
+
+if(i < messageText.length){
+
+let char = messageText.charAt(i);
+
+if(char === "\n"){
+target.innerHTML += "<br>";
+}else{
+target.innerHTML += char;
+}
+
+i++;
+setTimeout(typing, speed);
+
+}
+
+}
+
+typing();
 }
 
 function sendMessage(){
