@@ -16,7 +16,7 @@ font-family:Arial;
 color:#00eaff;
 }
 
-/* phone frame */
+/* phone */
 
 .phone{
 width:340px;
@@ -26,6 +26,15 @@ background:#0b1424;
 box-shadow:0 0 30px rgba(0,255,255,0.2);
 overflow:hidden;
 position:relative;
+transition:all .8s ease;
+}
+
+/* closing animation */
+
+.phone.close{
+transform:scale(.7) rotateX(25deg);
+opacity:0;
+filter:blur(6px);
 }
 
 /* header */
@@ -37,7 +46,7 @@ font-weight:bold;
 border-bottom:1px solid rgba(0,255,255,.3);
 }
 
-/* message notification */
+/* inbox card */
 
 .messageCard{
 margin:20px;
@@ -46,14 +55,9 @@ border-radius:12px;
 background:rgba(0,255,255,0.05);
 border:1px solid rgba(0,255,255,.4);
 cursor:pointer;
-transition:.3s;
 }
 
-.messageCard:hover{
-background:rgba(0,255,255,0.15);
-}
-
-/* chat screen */
+/* chat */
 
 .chatScreen{
 display:none;
@@ -61,7 +65,7 @@ flex-direction:column;
 height:100%;
 }
 
-/* message bubble */
+/* messages */
 
 .msg{
 margin:15px;
@@ -70,7 +74,24 @@ border-radius:10px;
 background:rgba(0,255,255,.15);
 }
 
-/* typing area */
+/* sent message */
+
+.sent{
+align-self:flex-end;
+background:#00eaff;
+color:black;
+margin:15px;
+padding:12px;
+border-radius:10px;
+animation:sendAnim .4s ease;
+}
+
+.tick{
+font-size:12px;
+margin-left:6px;
+}
+
+/* input */
 
 .inputArea{
 position:absolute;
@@ -90,8 +111,6 @@ color:#00eaff;
 outline:none;
 }
 
-/* send button */
-
 button{
 padding:15px 20px;
 background:#00eaff;
@@ -100,30 +119,31 @@ color:black;
 cursor:pointer;
 }
 
-/* sent message */
-
-.sent{
-align-self:flex-end;
-background:#00eaff;
-color:black;
-margin:15px;
-padding:12px;
-border-radius:10px;
-animation:sendAnim .4s ease;
-}
-
-/* tick mark */
-
-.tick{
-font-size:12px;
-margin-left:6px;
-}
-
-/* send animation */
+/* animations */
 
 @keyframes sendAnim{
 0%{transform:translateX(40px);opacity:0}
 100%{transform:translateX(0);opacity:1}
+}
+
+/* transmission overlay */
+
+.overlay{
+position:absolute;
+width:100%;
+height:100%;
+background:#050a14;
+display:flex;
+justify-content:center;
+align-items:center;
+font-size:20px;
+opacity:0;
+pointer-events:none;
+transition:.5s;
+}
+
+.overlay.active{
+opacity:1;
 }
 
 </style>
@@ -131,27 +151,24 @@ margin-left:6px;
 
 <body>
 
-<div class="phone">
+<div class="phone" id="phone">
 
-<div class="header">Central Detective Council</div>
+<div class="header">Secure Channel</div>
 
-<!-- Inbox -->
+<!-- inbox -->
 
 <div id="inbox">
 
 <div class="messageCard" onclick="openMessage()">
-
-<strong>Rosalio, Superior-CDC</strong>
-
+<strong>Central Detective Council</strong>
 <p style="margin-top:8px;color:#8defff;">
 Case assigned. Immediate response required.
 </p>
-
 </div>
 
 </div>
 
-<!-- Chat Screen -->
+<!-- chat -->
 
 <div id="chat" class="chatScreen">
 
@@ -170,15 +187,19 @@ Your agency has been selected for the investigation.
 
 </div>
 
+<!-- transmission overlay -->
+
+<div class="overlay" id="overlay">
+Transmission Sent ✓
+</div>
+
 </div>
 
 <script>
 
 function openMessage(){
-
 document.getElementById("inbox").style.display="none"
 document.getElementById("chat").style.display="flex"
-
 }
 
 function sendMessage(){
@@ -195,6 +216,22 @@ bubble.innerHTML=text+' <span class="tick">✓</span>'
 document.getElementById("chatArea").appendChild(bubble)
 
 input.value=""
+
+/* show transmission overlay */
+
+setTimeout(()=>{
+
+document.getElementById("overlay").classList.add("active")
+
+},700)
+
+/* close screen */
+
+setTimeout(()=>{
+
+document.getElementById("phone").classList.add("close")
+
+},1800)
 
 }
 
