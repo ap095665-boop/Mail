@@ -1,107 +1,118 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Central Detective Council</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Detective Communication</title>
 
 <style>
 
 body{
 margin:0;
-background:#0a0f1a;
 font-family:Arial;
+background:#0c111b;
 color:white;
 height:100vh;
-display:flex;
-flex-direction:column;
+overflow:hidden;
 }
 
-.header{
-background:#121a2b;
+/* TOP BAR */
+
+.topbar{
+background:#111827;
 padding:15px;
-font-size:20px;
 text-align:center;
-letter-spacing:2px;
+font-weight:bold;
+letter-spacing:1px;
 }
 
-.main{
+/* MAIN SCREEN */
+
+.screen{
+height:100%;
 display:flex;
-flex:1;
+align-items:center;
+justify-content:center;
+flex-direction:column;
+gap:20px;
 }
 
-.control{
-width:320px;
-background:#0f1626;
-padding:15px;
-border-right:1px solid #333;
-}
-
-.control input, textarea{
-width:100%;
-margin-bottom:10px;
-padding:8px;
-background:#1b2338;
-border:none;
-color:white;
-}
-
-.control button{
-width:100%;
-padding:10px;
+button{
+padding:12px 20px;
 background:#2563eb;
 border:none;
 color:white;
-cursor:pointer;
-margin-bottom:8px;
+border-radius:8px;
+font-size:16px;
 }
 
-.screen{
-flex:1;
-position:relative;
+/* POPUP */
+
+.popup{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:#000000e0;
+display:none;
+flex-direction:column;
+justify-content:center;
 padding:20px;
 }
 
-.chat{
-height:100%;
-overflow:auto;
-}
+/* MESSAGE CARD */
 
-.message{
-margin:10px 0;
-padding:10px;
-border-radius:6px;
-max-width:60%;
-}
-
-.sent{
-background:#2563eb;
-margin-left:auto;
-}
-
-.received{
-background:#374151;
-}
-
-.sender{
-font-size:12px;
-color:#9ca3af;
-margin-bottom:4px;
-}
-
-.popup{
-position:absolute;
-top:20px;
-right:20px;
+.card{
 background:#111827;
 padding:20px;
 border-radius:10px;
-display:none;
-box-shadow:0 0 15px black;
-width:260px;
 }
 
-.popup h4{
-margin-top:0;
+.sender{
+font-weight:bold;
+margin-bottom:5px;
+}
+
+.designation{
+font-size:12px;
+color:#9ca3af;
+margin-bottom:15px;
+}
+
+.message{
+line-height:1.4;
+}
+
+/* REPLY BAR */
+
+.replybar{
+position:absolute;
+bottom:0;
+left:0;
+width:100%;
+background:#111827;
+padding:10px;
+display:flex;
+gap:10px;
+}
+
+.replybar input{
+flex:1;
+padding:10px;
+border:none;
+border-radius:6px;
+}
+
+/* SEND POPUP */
+
+.form input,textarea{
+width:100%;
+margin-bottom:10px;
+padding:10px;
+border:none;
+border-radius:6px;
 }
 
 </style>
@@ -110,102 +121,99 @@ margin-top:0;
 
 <body>
 
-<div class="header">
-CENTRAL DETECTIVE COUNCIL COMMUNICATION SYSTEM
-</div>
-
-<div class="main">
-
-<div class="control">
-
-<h3>Incoming Message</h3>
-
-<input id="name" placeholder="Officer Name">
-<input id="rank" placeholder="Designation">
-
-<textarea id="incomingText" placeholder="Incoming message"></textarea>
-
-<button onclick="triggerIncoming()">Trigger Incoming Mail</button>
-
-<hr>
-
-<h3>Send Message</h3>
-
-<textarea id="sendText" placeholder="Your message"></textarea>
-
-<button onclick="sendMessage()">Send Message</button>
-
+<div class="topbar">
+Central Detective Communication
 </div>
 
 <div class="screen">
 
-<div class="chat" id="chat"></div>
+<button onclick="openIncoming()">Simulate Incoming Message</button>
 
-<div class="popup" id="popup">
+<button onclick="openSend()">Send Message</button>
 
-<h4>📨 Incoming Transmission</h4>
+</div>
 
-<div id="popupSender"></div>
 
-<p id="popupMessage"></p>
+<!-- INCOMING MESSAGE SCREEN -->
 
-<button onclick="acceptMessage()">Open</button>
+<div class="popup" id="incomingPopup">
+
+<div class="card">
+
+<div class="sender" id="senderName"></div>
+<div class="designation" id="senderRole"></div>
+
+<div class="message" id="messageText"></div>
+
+</div>
+
+<div class="replybar">
+
+<input placeholder="Type reply...">
+
+<button onclick="closeIncoming()">Send</button>
 
 </div>
 
 </div>
 
+
+
+<!-- SEND MESSAGE SCREEN -->
+
+<div class="popup" id="sendPopup">
+
+<div class="card form">
+
+<h3>Create Message</h3>
+
+<input id="nameInput" placeholder="Sender Name">
+
+<input id="roleInput" placeholder="Designation">
+
+<textarea id="msgInput" placeholder="Message"></textarea>
+
+<button onclick="sendMessage()">Send Message</button>
+
+<button onclick="closeSend()">Cancel</button>
+
 </div>
+
+</div>
+
+
 
 <script>
 
-const chat = document.getElementById("chat")
-
-function triggerIncoming(){
-
-let name=document.getElementById("name").value
-let rank=document.getElementById("rank").value
-let text=document.getElementById("incomingText").value
-
-document.getElementById("popupSender").innerText=name+" - "+rank
-document.getElementById("popupMessage").innerText=text
-
-document.getElementById("popup").style.display="block"
-
+function openIncoming(){
+document.getElementById("incomingPopup").style.display="flex"
 }
 
-function acceptMessage(){
+function closeIncoming(){
+document.getElementById("incomingPopup").style.display="none"
+}
 
-let name=document.getElementById("name").value
-let rank=document.getElementById("rank").value
-let text=document.getElementById("incomingText").value
+function openSend(){
+document.getElementById("sendPopup").style.display="flex"
+}
 
-let msg=document.createElement("div")
-msg.className="message received"
-
-msg.innerHTML="<div class='sender'>"+name+" ("+rank+")</div>"+text
-
-chat.appendChild(msg)
-
-document.getElementById("popup").style.display="none"
-
-chat.scrollTop=chat.scrollHeight
-
+function closeSend(){
+document.getElementById("sendPopup").style.display="none"
 }
 
 function sendMessage(){
 
-let text=document.getElementById("sendText").value
+let name=document.getElementById("nameInput").value
+let role=document.getElementById("roleInput").value
+let msg=document.getElementById("msgInput").value
 
-let msg=document.createElement("div")
-msg.className="message sent"
-msg.innerText=text
+document.getElementById("senderName").innerText=name
+document.getElementById("senderRole").innerText=role
+document.getElementById("messageText").innerText=msg
 
-chat.appendChild(msg)
+closeSend()
 
-document.getElementById("sendText").value=""
-
-chat.scrollTop=chat.scrollHeight
+document.getElementById("incomingPopup").style.display="flex"
 
 }
 
